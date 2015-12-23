@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BCBB56D3-7F48-463E-8411-79A515087D3C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MonoGameMPE</RootNamespace>
+    <AssemblyName>MonoGameMPE</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MgMercury.Editor.TypeEditors">
+      <HintPath>..\MgMercury.Editor.TypeEditors\bin\Debug\MgMercury.Editor.TypeEditors.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.5.0.828, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ColorHelper.cs" />
+    <Compile Include="Core\Axis.cs" />
+    <Compile Include="Core\BlendMode.cs" />
+    <Compile Include="Core\Colour.cs" />
+    <Compile Include="Core\ColourRange.cs" />
+    <Compile Include="Core\Emitter.cs" />
+    <Compile Include="Core\FastRand.cs" />
+    <Compile Include="Core\LineSegment.cs" />
+    <Compile Include="Core\ModifierExecutionStrategy.cs" />
+    <Compile Include="Core\Modifiers\ColourInterpolator2.cs" />
+    <Compile Include="Core\Modifiers\Container\CircleContainerModifier.cs" />
+    <Compile Include="Core\Modifiers\Container\RectContainerModifier.cs" />
+    <Compile Include="Core\Modifiers\DragModifier.cs" />
+    <Compile Include="Core\Modifiers\HueInterpolator2.cs" />
+    <Compile Include="Core\Modifiers\LinearGravityModifier.cs" />
+    <Compile Include="Core\Modifiers\Container\RectLoopContainerModifier.cs" />
+    <Compile Include="Core\Modifiers\IModifier.cs" />
+    <Compile Include="Core\Modifiers\OpacityFastFadeModifier.cs" />
+    <Compile Include="Core\Modifiers\OpacityInterpolator2.cs" />
+    <Compile Include="Core\Modifiers\RotationModifier.cs" />
+    <Compile Include="Core\Modifiers\ScaleInterpolator2.cs" />
+    <Compile Include="Core\Modifiers\VelocityColourModifier.cs" />
+    <Compile Include="Core\Modifiers\VelocityHueModifier.cs" />
+    <Compile Include="Core\Modifiers\VortexModifier.cs" />
+    <Compile Include="Core\Particle.cs" />
+    <Compile Include="Core\ParticleBuffer.cs" />
+    <Compile Include="Core\ParticleEffect.cs" />
+    <Compile Include="Core\Profiles\BoxFillProfile.cs" />
+    <Compile Include="Core\Profiles\BoxProfile.cs" />
+    <Compile Include="Core\Profiles\BoxUniformProfile.cs" />
+    <Compile Include="Core\Profiles\CircleProfile.cs" />
+    <Compile Include="Core\Profiles\LineProfile.cs" />
+    <Compile Include="Core\Profiles\PointProfile.cs" />
+    <Compile Include="Core\Profiles\Profile.cs" />
+    <Compile Include="Core\Profiles\RingProfile.cs" />
+    <Compile Include="Core\Profiles\SprayProfile.cs" />
+    <Compile Include="Core\Range.cs" />
+    <Compile Include="Core\RangeF.cs" />
+    <Compile Include="Core\ReleaseParameters.cs" />
+    <Compile Include="Core\RenderingOrder.cs" />
+    <Compile Include="Core\SpritebatchRenderer.cs" />
+    <Compile Include="Core\Vector.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Core\Mercury.ParticleEngine.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Core\packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

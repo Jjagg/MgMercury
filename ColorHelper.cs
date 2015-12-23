@@ -1,60 +1,79 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
+using MonoGameMPE.Core;
 
 namespace MonoGameMPE
 {
-    public class ColorHelper
+    public static class ColorHelper
     {
-        public static Color FromHsl(float h, float s, float l)
+
+        public static Color ToRgb(this Colour c)
         {
-            var r = l;
-            var g = l;
-            var b = l;
-            var v = l <= 0.5 ? l * (1.0f + s) : l + s - l * s;
+            return ToRgb(c.H, c.S, c.L);
+        }
 
-            if (!(v > 0)) return new Color(r, g, b);
+        public static Color ToRgb(float h, float s, float l)
+        {
+            if (s == 0)
+                return new Color(l, l, l);
 
-            float m = l + l - v;
-            float sv = (v - m) / v;
-            h *= 6.0f;
-            var sextant = (int)h;
-            float fract = h - sextant;
-            var vsf = v * sv * fract;
-            var mid1 = m + vsf;
-            var mid2 = v - vsf;
-            switch (sextant)
-            {
-                case 0:
-                    r = v;
-                    g = mid1;
-                    b = m;
-                    break;
-                case 1:
-                    r = mid2;
-                    g = v;
-                    b = m;
-                    break;
-                case 2:
-                    r = m;
-                    g = v;
-                    b = mid1;
-                    break;
-                case 3:
-                    r = m;
-                    g = mid2;
-                    b = v;
-                    break;
-                case 4:
-                    r = mid1;
-                    g = m;
-                    b = v;
-                    break;
-                case 5:
-                    r = v;
-                    g = m;
-                    b = mid2;
-                    break;
-            }
-            return new Color(r, g, b);
+            h = h/360f;
+            var max = l < 0.5f ? l * (1 + s) : (l + s) - (l * s);
+            var min = 2f * l - max;
+            
+            return new Color(
+                ComponentFromHue(min,max,h + 1f/3f),
+                ComponentFromHue(min, max, h),
+                ComponentFromHue(min, max, h - 1f/3f));
+        }
+
+        private static float ComponentFromHue(float m1, float m2, float h)
+        {
+            h = (h + 1f) % 1f;
+            if (h*6f < 1)
+                return m1 + (m2 - m1)*6f*h;
+            if (h*2 < 1)
+                return m2;
+            if (h*3 < 2)
+                return m1 + (m2 - m1)*(2f/3f - h)*6f;
+            return m1;
+        }
+
+        public static Colour ToHsl(this Color c)
+        {
+            return ToHsl(c.R, c.B, c.G);
+        }
+
+        public static Colour ToHsl(float r, float b, float g)
+        {
+            var result = new Colour();
+
+            r = r/255f;
+            b = b/255f;
+            g = g/255f;
+
+            var max = Math.Max(Math.Max(r, g), b);
+            var min = Math.Min(Math.Min(r, g), b);
+            var chroma = max - min;
+            var sum = max + min;
+
+            var l = sum*0.5f;
+            result.L = l;
+
+            if (chroma == 0) return result;
+            float h;
+            if (r == max)
+                h = (60 * (g - b)/chroma + 360) % 360;
+            else if (g == max)
+                h = 60 * (b - r)/chroma + 120f;
+            else
+                h = 60 * (r - g)/chroma + 240f;
+
+            result.H = h;
+            
+            result.S = l <= 0.5f ? chroma / sum : chroma / (2f - sum);
+
+            return result;
         }
     }
 }
