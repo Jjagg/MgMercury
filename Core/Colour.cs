@@ -9,12 +9,10 @@ namespace MonoGameMPE.Core {
     [Serializable]
     public struct Colour : IEquatable<Colour>
     {
-        private float _h, _s, _l;
-
         /// <summary>
         /// Gets the value of the hue channel in degrees.
         /// </summary>
-        public float H {get { return _h; } set { _h = NormalizeHue(value); } }
+        public readonly float H;
 
         private static float NormalizeHue(float h)
         {
@@ -25,12 +23,12 @@ namespace MonoGameMPE.Core {
         /// <summary>
         /// Gets the value of the saturation channel.
         /// </summary>
-        public float S { get { return _s; } set { _s = MathHelper.Clamp(value, 0f, 1f); } }
+        public readonly float S;
 
         /// <summary>
         /// Gets the value of the lightness channel.
         /// </summary>
-        public float L { get { return _l; } set { _l = MathHelper.Clamp(value, 0f, 1f); } }
+        public readonly float L;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Colour"/> structure.
@@ -41,9 +39,9 @@ namespace MonoGameMPE.Core {
         public Colour(float h, float s, float l) : this()
         {
             // normalize the hue
-            H = h;
-            S = s;
-            L = l;
+            H = NormalizeHue(h);
+            S = MathHelper.Clamp(s, 0f, 1f);
+            L = MathHelper.Clamp(l, 0f, 1f);
         }
 
         /// <summary>

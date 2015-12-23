@@ -23,9 +23,10 @@ namespace MonoGameMPE.Core.Modifiers
                 else {
                     var t = (float)Math.Sqrt(velocity2) / VelocityThreshold;
 
-                    particle->Colour.H = deltaColour.H * t + StationaryColour.H;
-                    particle->Colour.S = deltaColour.S * t + StationaryColour.S;
-                    particle->Colour.L = deltaColour.L * t + StationaryColour.L;
+                    particle->Colour = new Colour(
+                        deltaColour.H * t + StationaryColour.H,
+                        deltaColour.S * t + StationaryColour.S,
+                        deltaColour.L * t + StationaryColour.L);
                 }
             }
         }

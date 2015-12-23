@@ -6,8 +6,8 @@ namespace MonoGameMPE.Core {
     /// including a magnitude value.
     /// </summary>
     public struct Vector {
-        public float X;
-        public float Y;
+        public readonly float X;
+        public readonly float Y;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Vector"/> structure.

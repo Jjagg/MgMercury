@@ -15,23 +15,27 @@
                 var top =    particle->TriggerPos.Y + Height * -0.5f;
                 var bottom = particle->TriggerPos.Y + Height * 0.5f;
 
+                float xPos = particle->Position.X;
+                float yPos = particle->Position.Y;
+
                 if ((int)particle->Position.X < left)
                 {
-                    particle->Position.X = particle->Position.X + Width;
+                    xPos = particle->Position.X + Width;
                 }
                 else if ((int)particle->Position.X > right)
                 {
-                    particle->Position.X = particle->Position.X - Width;
+                    xPos = particle->Position.X - Width;
                 }
 
                 if ((int)particle->Position.Y < top)
                 {
-                    particle->Position.Y = particle->Position.Y + Height;
+                    yPos = particle->Position.Y + Height;
                 }
                 else if ((int)particle->Position.Y > bottom)
                 {
-                    particle->Position.Y = particle->Position.Y - Height;
+                    yPos = particle->Position.Y - Height;
                 }
+                particle->Position = new Vector(xPos, yPos);
             }
         }
     }

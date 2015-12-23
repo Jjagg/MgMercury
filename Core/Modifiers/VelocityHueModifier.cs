@@ -16,13 +16,15 @@ namespace MonoGameMPE.Core.Modifiers
                 var particle = iterator.Next();
                 var velocity2 = particle->Velocity.LengthSq;
 
+                float h;
                 if (velocity2 >= velocityThreshold2) {
-                    particle->Colour.H = VelocityHue;
+                    h = VelocityHue;
                 }
                 else {
                     var t = (float)Math.Sqrt(velocity2) / VelocityThreshold;
-                    particle->Colour.H = MathHelper.Lerp(StationaryHue, VelocityHue, t);
+                    h = MathHelper.Lerp(StationaryHue, VelocityHue, t);
                 }
+                particle->Colour = new Colour(h, particle->Colour.S, particle->Colour.L);
             }
         }
     }
