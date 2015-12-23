@@ -50,9 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorHelper.cs" />
     <Compile Include="Core\Axis.cs" />
     <Compile Include="Core\BlendMode.cs" />
+    <Compile Include="Core\ColorHelper.cs" />
     <Compile Include="Core\Colour.cs" />
     <Compile Include="Core\ColourRange.cs" />
     <Compile Include="Core\Emitter.cs" />
