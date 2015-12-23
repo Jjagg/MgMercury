@@ -126,9 +126,6 @@ namespace MonoGameMPE.Core {
                 if (_current >= _buffer.BufferEnd)
                     _current -= _buffer.Size + 1;
 
-                if (_buffer.Tail == _buffer.Head && Total > 0)
-                    Console.Write("Woops");
-
                 return this;
             }
             
