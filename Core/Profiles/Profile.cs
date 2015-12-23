@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace MonoGameMPE.Core.Profiles
 {
-    [TypeConverter(typeof(ExpandableObjectConverter))]
     public abstract class Profile : ICloneable
     {
 

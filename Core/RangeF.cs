@@ -1,17 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using MgMercury.Editor.TypeEditors;
 
 namespace MonoGameMPE.Core {
     /// <summary>
     /// Represents a closed interval of floating point values.
     /// </summary>
     [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    [TypeConverter(typeof(ValueTypeTypeConverter))]
     public struct RangeF : IEquatable<RangeF>, IFormattable {
         /// <summary>
         /// Defines a template for a regex which can be used to validate a string representation
@@ -52,8 +47,8 @@ namespace MonoGameMPE.Core {
         /// parameters are not finite. That is, positive infinity, negative infinity, or NaN.
         /// </exception>
         public RangeF(float min, float max) {
-            _min = Math.Min(min, max);
-            _max = Math.Max(min, max);
+            Min = Math.Min(min, max);
+            Max = Math.Max(min, max);
         }
 
         /// <summary>
@@ -80,75 +75,53 @@ namespace MonoGameMPE.Core {
             return new RangeF(Math.Min(x.Min, y.Min), Math.Max(x.Max, y.Max));
         }
 
-        private float _min;
-        private float _max;
-
         /// <summary>
         /// Gets or sets the inclusive minimum value in the interval.
         /// </summary>
-        public float Min {
-            get { return _min; }
-            set
-            {
-                _min = value;
-            }
-        }
+        public readonly float Min;
 
         /// <summary>
         /// Gets or sets the inclusive maximum value in the interval.
         /// </summary>
-        public float Max {
-            get { return _max; }
-            set
-            {
-                _max = value;
-            }
-        }
+        public readonly float Max;
 
         /// <summary>
         /// Gets the diameter (size) of the interval.
         /// </summary>
-        [Browsable(false)]
         public float Diameter => Math.Abs(Min - Max);
 
         /// <summary>
         /// Gets the centre of the interval.
         /// </summary>
-        [Browsable(false)]
         public float Centre => Min + Radius;
 
         /// <summary>
         /// Gets or sets the radius of the interval.
         /// </summary>
-        [Browsable(false)]
         public float Radius => Diameter / 2f;
 
         /// <summary>
         /// Gets a value indicating whether or not the interval is degenerate. A degenerate interval
         /// is one which contains only a float distinct boundary (X == Y, Diameter == 0).
         /// </summary>
-        [Browsable(false)]
         public bool IsDegenerate => Min.Equals(Max);
 
         /// <summary>
         /// Gets a value indicating whether or not the interval is proper. A proper interval is one
         /// which is neither empty or degenerate.
         /// </summary>
-        [Browsable(false)]
         public bool IsProper => !Min.Equals(Max);
 
         /// <summary>
         /// Gets the interior of the interval. The interior is the largest proper interval contained
         /// within this interval.
         /// </summary>
-        [Browsable(false)]
         public RangeF Interior => new RangeF(Min + float.Epsilon, Max - float.Epsilon);
 
         /// <summary>
         /// Gets the closure of the interval. The closure is the smallest proper interval which
         /// contains this interval.
         /// </summary>
-        [Browsable(false)]
         public RangeF Closure => new RangeF(Min - float.Epsilon, Max + float.Epsilon);
 
         /// <summary>
@@ -233,9 +206,8 @@ namespace MonoGameMPE.Core {
         ///     <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj) {
-            if (obj != null)
-                if (obj is RangeF)
-                    return Equals((RangeF)obj);
+            if (obj is RangeF)
+                return Equals((RangeF)obj);
 
             return false;
         }

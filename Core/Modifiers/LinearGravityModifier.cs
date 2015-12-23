@@ -10,8 +10,9 @@
 
             while (iterator.HasNext) {
                 var particle = iterator.Next();
-                particle->Velocity.X += vector.X * particle->Mass;
-                particle->Velocity.Y += vector.Y * particle->Mass;
+                particle->Velocity = new Vector(
+                    particle->Velocity.X + vector.X * particle->Mass,
+                    particle->Velocity.Y + vector.Y * particle->Mass);
             }
         }
     }

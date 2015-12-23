@@ -1,17 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using MgMercury.Editor.TypeEditors;
 
 namespace MonoGameMPE.Core {
     /// <summary>
     /// Represents a closed interval of values.
     /// </summary>
     [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    [TypeConverter(typeof(ValueTypeTypeConverter))]
     public struct Range : IEquatable<Range>, IFormattable {
         /// <summary>
         /// Defines a template for a regex which can be used to validate a string representation
@@ -50,8 +45,8 @@ namespace MonoGameMPE.Core {
         /// parameters are not finite. That is, positive infinity, negative infinity, or NaN.
         /// </exception>
         public Range(int x, int y) {
-            _min = Math.Min(x, y);
-            _max = Math.Max(x, y);
+            Min = Math.Min(x, y);
+            Max = Math.Max(x, y);
         }
 
         /// <summary>
@@ -78,75 +73,53 @@ namespace MonoGameMPE.Core {
             return new Range(Math.Min(x.Min, y.Min), Math.Max(x.Max, y.Max));
         }
 
-        private int _min;
-        private int _max;
-
         /// <summary>
         /// Gets or sets the inclusive minimum value in the interval.
         /// </summary>
-        public int Min {
-            get { return _min; }
-            set
-            {
-                _min = value;
-            }
-        }
+        public readonly int Min;
 
         /// <summary>
         /// Gets or sets the inclusive maximum value in the interval.
         /// </summary>
-        public int Max {
-            get { return _max; }
-            set
-            {
-                _max = value;
-            }
-        }
+        public readonly int Max;
 
         /// <summary>
         /// Gets the diameter (size) of the interval.
         /// </summary>
-        [Browsable(false)]
         public int Diameter => Math.Abs(Min - Max);
 
         /// <summary>
         /// Gets the centre of the interval.
         /// </summary>
-        [Browsable(false)]
         public int Centre => Min + Radius;
 
         /// <summary>
         /// Gets or sets the radius of the interval.
         /// </summary>
-        [Browsable(false)]
         public int Radius => Diameter / 2;
 
         /// <summary>
         /// Gets a value indicating whether or not the interval is degenerate. A degenerate interval
         /// is one which contains only a float distinct boundary (X == Y, Diameter == 0).
         /// </summary>
-        [Browsable(false)]
         public bool IsDegenerate => Min.Equals(Max);
 
         /// <summary>
         /// Gets a value indicating whether or not the interval is proper. A proper interval is one
         /// which is neither empty or degenerate.
         /// </summary>
-        [Browsable(false)]
         public bool IsProper => !Min.Equals(Max);
 
         /// <summary>
         /// Gets the interior of the interval. The interior is the largest proper interval contained
         /// within this interval.
         /// </summary>
-        [Browsable(false)]
         public Range Interior => new Range(Min + 1, Max - 1);
 
         /// <summary>
         /// Gets the closure of the interval. The closure is the smallest proper interval which
         /// contains this interval.
         /// </summary>
-        [Browsable(false)]
         public Range Closure => new Range(Min - 1, Max + 1);
 
         /// <summary>

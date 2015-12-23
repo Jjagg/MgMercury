@@ -8,8 +8,9 @@
                 var particle = iterator.Next();
                 var drag = -DragCoefficient * Density * particle->Mass * elapsedSeconds;
 
-                particle->Velocity.X += particle->Velocity.X * drag;
-                particle->Velocity.Y += particle->Velocity.Y * drag;
+                particle->Velocity = new Vector(
+                    particle->Velocity.X + particle->Velocity.X * drag,
+                    particle->Velocity.Y + particle->Velocity.Y * drag);
             }
         }
     }

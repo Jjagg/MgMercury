@@ -46,8 +46,6 @@ namespace MonoGameMPE
 
         public static Colour ToHsl(float r, float b, float g)
         {
-            var result = new Colour();
-
             r = r/255f;
             b = b/255f;
             g = g/255f;
@@ -58,9 +56,8 @@ namespace MonoGameMPE
             var sum = max + min;
 
             var l = sum*0.5f;
-            result.L = l;
-
-            if (chroma == 0) return result;
+            
+            if (chroma == 0) return new Colour(0f, 0f, l);
             float h;
             if (r == max)
                 h = (60 * (g - b)/chroma + 360) % 360;
@@ -68,12 +65,10 @@ namespace MonoGameMPE
                 h = 60 * (b - r)/chroma + 120f;
             else
                 h = 60 * (r - g)/chroma + 240f;
-
-            result.H = h;
             
-            result.S = l <= 0.5f ? chroma / sum : chroma / (2f - sum);
+            var s = l <= 0.5f ? chroma / sum : chroma / (2f - sum);
 
-            return result;
+            return new Colour(h, s, l);
         }
     }
 }

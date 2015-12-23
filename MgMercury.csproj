@@ -35,9 +35,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MgMercury.Editor.TypeEditors">
-      <HintPath>..\MgMercury.Editor.TypeEditors\bin\Debug\MgMercury.Editor.TypeEditors.dll</HintPath>
-    </Reference>
     <Reference Include="MonoGame.Framework, Version=3.5.0.828, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>

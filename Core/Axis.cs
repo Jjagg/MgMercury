@@ -1,35 +1,16 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using MgMercury.Editor.TypeEditors;
 
 namespace MonoGameMPE.Core {
     /// <summary>
     /// An immutable data structure representing a directed fixed axis.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    [TypeConverter(typeof(ValueTypeTypeConverter))]
-    public struct Axis : IEquatable<Axis> {
-        [Browsable(false)]
-        public float X { get; set; }
+    public struct Axis : IEquatable<Axis>
+    {
+        public readonly float X;
 
-        [Browsable(false)]
-        public float Y { get; set; }
+        public readonly float Y;
 
-        public float Angle
-        {
-            get { return (float) Math.Atan2(Y, X); }
-            set
-            {
-                var x = (float)Math.Cos(value);
-                var y = (float)Math.Sin(value);
-
-                var length = (float)Math.Sqrt(x * x + y * y);
-
-                X = x / length;
-                Y = y / length;
-            }
-        }
+        public float Angle => (float) Math.Atan2(Y, X);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Axis"/> structure.
@@ -49,7 +30,13 @@ namespace MonoGameMPE.Core {
         /// <param name="angle">The angle of the axis in radians.</param>
         public Axis(float angle) : this()
         {
-            Angle = angle;
+            var x = (float)Math.Cos(angle);
+            var y = (float)Math.Sin(angle);
+
+            var length = (float)Math.Sqrt(x * x + y * y);
+
+            X = x / length;
+            Y = y / length;
         }
 
         /// <summary>

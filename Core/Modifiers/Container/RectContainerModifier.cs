@@ -17,23 +17,30 @@
                 var top =    particle->TriggerPos.Y + Height * -0.5f;
                 var bottom = particle->TriggerPos.Y + Height * 0.5f;
 
+                float xPos = particle->Position.X;
+                float xVel = particle->Velocity.X;
+                float yPos = particle->Position.Y;
+                float yVel = particle->Velocity.Y;
+
                 if ((int)particle->Position.X < left) {
-                    particle->Position.X = left + (left - particle->Position.X);
-                    particle->Velocity.X = -particle->Velocity.X * RestitutionCoefficient;
+                    xPos = left + (left - xPos);
+                    xVel = -xVel * RestitutionCoefficient;
                 }
                 else if (particle->Position.X > right) {
-                    particle->Position.X = right - (particle->Position.X - right);
-                    particle->Velocity.X = -particle->Velocity.X * RestitutionCoefficient;
+                    xPos = right - (xPos - right);
+                    xVel = -xVel * RestitutionCoefficient;
                 }
 
                 if (particle->Position.Y < top) {
-                    particle->Position.Y = top + (top - particle->Position.Y);
-                    particle->Velocity.Y = -particle->Velocity.Y * RestitutionCoefficient;
+                    yPos = top + (top - yPos);
+                    yVel = -yVel * RestitutionCoefficient;
                 }
                 else if ((int)particle->Position.Y > bottom) {
-                    particle->Position.Y = bottom - (particle->Position.Y - bottom);
-                    particle->Velocity.Y = -particle->Velocity.Y * RestitutionCoefficient;
+                    yPos = bottom - (yPos - bottom);
+                    yVel = -yVel * RestitutionCoefficient;
                 }
+                particle->Position = new Vector(xPos, yPos);
+                particle->Velocity = new Vector(xVel, yVel);
             }
         }
     }

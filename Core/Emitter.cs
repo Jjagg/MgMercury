@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameMPE.Core.Modifiers;
 using MonoGameMPE.Core.Profiles;
@@ -23,34 +22,25 @@ namespace MonoGameMPE.Core
             ModifierExecutionStrategy = ModifierExecutionStrategy.Serial;
             Parameters = new ReleaseParameters();
         }
-
-        [Description("How long each particle will exist. To change this value, reinitialize the emitter.")]
+        
         private readonly float _term;
 
-        [Browsable(false)] private float _totalSeconds;
-        [Browsable(false)] internal readonly ParticleBuffer Buffer;
-
-        [Browsable(false)]
+        private float _totalSeconds;
+        internal readonly ParticleBuffer Buffer;
+        
         public int ActiveParticles => Buffer.Count;
-
-        [Description("The name of this emitter.")]
-        public string Name { get; set; }
+        
         public Vector Offset { get; set; }
-        [Browsable(false)]
+        
         public IModifier[] Modifiers { get; set; }
-
-        [Browsable(false)]
+        
         public ModifierExecutionStrategy ModifierExecutionStrategy { get; set; }
-
-        [Description("Determines initial particle position and direction. To change this value, reinitialize the emitter.")]
+        
         public Profile Profile { get; }
-        [Description("Release values for the particles.")]
         public ReleaseParameters Parameters { get; set; }
-        [Description("Blend mode used when drawing particles on top of each other.")]
         public BlendMode BlendMode { get; set; }
-        [Description("Name of the texture of the particles.")]
         public string TextureKey { get; set; }
-        [Browsable(false)]
+
         public Texture2D Texture { get; set; }
 
         private void ReclaimExpiredParticles()

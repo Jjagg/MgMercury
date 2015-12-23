@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace MonoGameMPE.Core.Modifiers {
+﻿namespace MonoGameMPE.Core.Modifiers {
     /// <summary>
     /// Defines a modifier which interpolates the colour of a particle over the course of its lifetime.
     /// </summary>
@@ -8,7 +6,6 @@ namespace MonoGameMPE.Core.Modifiers {
         /// <summary>
         /// Gets or sets the initial colour of particles when they are released.
         /// </summary>
-        [Description("The color a particle gets emitted at.")]
         public Colour InitialColour { get; set; }
 
         /// <summary>
