@@ -1,15 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using MgMercury.Editor.TypeEditors;
 
 namespace MonoGameMPE.Core {
     /// <summary>
     /// Defines a data structure representing a Euclidean vector facing a particular direction,
     /// including a magnitude value.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    [TypeConverter(typeof(ValueTypeTypeConverter))]
     public struct Vector {
         public float X;
         public float Y;

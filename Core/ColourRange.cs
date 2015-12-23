@@ -1,10 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
-using MgMercury.Editor.TypeEditors;
 
 namespace MonoGameMPE.Core
 {
-    [TypeConverter(typeof(ValueTypeTypeConverter))]
     public struct ColourRange
     {
         public ColourRange(Colour min, Colour max) {
@@ -12,8 +9,8 @@ namespace MonoGameMPE.Core
             Max = max;
         }
 
-        public Colour Min { get; set; }
-        public Colour Max { get; set; }
+        public readonly Colour Min;
+        public readonly Colour Max;
 
         public static ColourRange Parse(string value)
         {

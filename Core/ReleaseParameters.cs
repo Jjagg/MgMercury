@@ -1,8 +1,5 @@
-﻿using System.ComponentModel;
-
-namespace MonoGameMPE.Core
+﻿namespace MonoGameMPE.Core
 {
-    [TypeConverter(typeof(ExpandableObjectConverter))]
     public class ReleaseParameters
     {
         public ReleaseParameters() {
@@ -15,21 +12,13 @@ namespace MonoGameMPE.Core
             Mass     = 1f;
         }
 
-        [Description("Amount of particles to release each time the emitter is triggered.")]
-        public Range Quantity { get; set; }
-        [Description("Speed at which the particles are released " +
-                     "(Note that direction is determined by the Profile of the emitter).")]
-        public RangeF Speed { get; set; }
-        [Description("Initial (British) HSL color of the particles.")]
-        public ColourRange Colour { get; set; }
-        [Description("Opacity of the colors on release.")]
-        public RangeF Opacity { get; set; }
-        [Description("The initial scale of the particle. (Use a modifier to set x and y scale separately")]
-        public RangeF Scale { get; set; }
-        [Description("Initial rotation of the particles in radians.")]
-        public RangeF Rotation { get; set; }
-        [Description("The mass of the particles. This is used in various modifiers.")]
-        public RangeF Mass { get; set; }
+        public Range Quantity;
+        public RangeF Speed;
+        public ColourRange Colour;
+        public RangeF Opacity;
+        public RangeF Scale;
+        public RangeF Rotation;
+        public RangeF Mass;
 
     }
 }
