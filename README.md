@@ -1,3 +1,6 @@
+*Update*: This project has been merged into [Monogame Extended](https://github.com/craftworkgames/MonoGame.Extended). I'm currently not working on a project that needs this engine, but if I need it in the future I'll probably write up an editor for effects and maybe a renderer that hands out some work to the GPU (not sure about performance right now, but a faster renderer is definitely possible).
+
+
 This is a version of the [Mercury Particle Engine](https://github.com/Matthew-Davey/mercury-particle-engine) usable with [MonoGame](https://github.com/mono/MonoGame). Basically to use the MPE all that's needed is a renderer that uses the MonoGame SpriteBatch and functions to convert HSL color to RGB. I made some other changes however, that made the engine more convenient to use IMO.
 
 # Structure
