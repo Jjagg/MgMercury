@@ -21,8 +21,8 @@ namespace MonoGameMPE.Core
             {
                 var noBrackets = value.Substring(1, value.Length - 2);
                 var colors = noBrackets.Split(';');
-                var c1 = Colour.Parse(colors[0]);
-                var c2 = Colour.Parse(colors[1]);
+                var c1 = Colour.Parse($"{colors[0]};{colors[1]};{colors[2]}");
+                var c2 = Colour.Parse($"{colors[3]};{colors[4]};{colors[5]}");
                 return new ColourRange(c1, c2);
             }
             catch

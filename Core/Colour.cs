@@ -145,13 +145,13 @@ namespace MonoGameMPE.Core {
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0}°,{1:P0},{2:P0}", 
+            return string.Format(CultureInfo.InvariantCulture, "{0}°;{1:P0};{2:P0}", 
                 H.ToString("F1"), (100*S).ToString("F1"), (100*L).ToString("F1"));
         }
 
         public static Colour Parse(string s)
         {
-            var hsl = s.Split(',');
+            var hsl = s.Split(';');
             var hue = float.Parse(hsl[0].TrimEnd('°'));
             var sat = float.Parse(hsl[1]);
             var lig = float.Parse(hsl[2]);
