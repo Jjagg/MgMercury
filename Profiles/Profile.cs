@@ -19,10 +19,7 @@ namespace Mercury3D.Profiles
             Out
         }
 
-        public static Profile Point()
-        {
-            return PointProfile.Instance;
-        }
+        public static Profile Point => PointProfile.Instance;
 
         public static Profile Line(Axis axis, float length)
         {
@@ -72,7 +69,17 @@ namespace Mercury3D.Profiles
             };
         }
 
-        public static Profile Circle(float radius, CircleRadiation radiate)
+        public static Profile Sphere(float radius, CircleRadiation radiate)
+        {
+            return new SphereProfile
+            {
+                Radius = radius,
+                Radiate = radiate
+            };
+
+        }
+
+        public static Profile SphereFill(float radius, CircleRadiation radiate)
         {
             return new SphereFillProfile
             {

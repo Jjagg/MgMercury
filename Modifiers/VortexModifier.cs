@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 
 namespace Mercury3D.Modifiers
@@ -6,6 +7,7 @@ namespace Mercury3D.Modifiers
     {
         public Vector3 Offset { get; set; }
         public float Mass { get; set; }
+        public float MaxSpeed { get; set; }
 
         // Note: not the real-life one
         private const float GravConst = 100000f;
@@ -19,10 +21,10 @@ namespace Mercury3D.Modifiers
 
                 var diff = particle->Position - pos;
                 var distSq = Vector3.Dot(diff, diff);
-                var speedGain = GravConst * Mass * elapsedSeconds / distSq;
+                var speedGain = Math.Min(GravConst * Mass * elapsedSeconds / distSq, MaxSpeed);
 
                 // normalize distances and multiply by speedGain
-                particle->Velocity += pos * speedGain;
+                particle->Velocity += Vector3.Normalize(diff) * speedGain;
             }
         }
     }

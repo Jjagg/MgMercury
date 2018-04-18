@@ -26,7 +26,7 @@ namespace Mercury3D
         private readonly float _term;
 
         private float _totalSeconds;
-        internal readonly ParticleBuffer Buffer;
+        public ParticleBuffer Buffer { get; }
         
         public int ActiveParticles => Buffer.Count;
         
@@ -39,9 +39,8 @@ namespace Mercury3D
         public Profile Profile { get; }
         public ReleaseParameters Parameters { get; set; }
         public BlendMode BlendMode { get; set; }
-        public string TextureKey { get; set; }
 
-        public int Texture { get; set; }
+        public object UserData { get; set; }
 
         private void ReclaimExpiredParticles()
         {
@@ -127,7 +126,7 @@ namespace Mercury3D
 
                 particle->Opacity  = FastRand.NextSingle(Parameters.Opacity);
                 var scale = FastRand.NextSingle(Parameters.Scale);
-                particle->Scale    = new Vector3(scale);
+                particle->Scale    = new Vector2(scale);
                 particle->Rotation = FastRand.NextSingle(Parameters.Rotation);
                 particle->Mass     = FastRand.NextSingle(Parameters.Mass);
             }

@@ -2,9 +2,11 @@
 using System.Runtime.InteropServices;
 using OpenWheels;
 
-namespace Mercury3D {
+namespace Mercury3D
+{
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct Particle {
+    public struct Particle
+    {
         public float Inception;
         public float Age;
         public Vector3 Position;
@@ -12,7 +14,7 @@ namespace Mercury3D {
         public Vector3 Velocity;
         public HsvColor Color;
         public float Opacity;
-        public Vector3 Scale;
+        public Vector2 Scale;
         public float Rotation;
         public float Mass;
 

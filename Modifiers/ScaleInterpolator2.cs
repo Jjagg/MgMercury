@@ -4,8 +4,8 @@ namespace Mercury3D.Modifiers
 {
     public class ScaleInterpolator2 : IModifier
     {
-        public Vector3 InitialScale { get; set; }
-        public Vector3 FinalScale { get; set; }
+        public Vector2 InitialScale { get; set; }
+        public Vector2 FinalScale { get; set; }
 
         public unsafe void Update(float elapsedSeconds, ParticleBuffer.ParticleIterator iterator)
         {
