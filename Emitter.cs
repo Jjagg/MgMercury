@@ -21,6 +21,7 @@ namespace Mercury3D
             Modifiers = new IModifier[0];
             ModifierExecutionStrategy = ModifierExecutionStrategy.Serial;
             Parameters = new ReleaseParameters();
+            BlendMode = BlendMode.Alpha;
         }
         
         private readonly float _term;
