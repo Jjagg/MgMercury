@@ -1,7 +1,9 @@
-﻿namespace Mercury3D.Modifiers {
-    public sealed class OpacityFastFadeModifier : IModifier {
-
-        public unsafe void Update(float elapsedSeconds, ParticleBuffer.ParticleIterator iterator) {
+﻿namespace Mercury3D.Modifiers
+{
+    public sealed class OpacityFastFadeModifier : IModifier
+    {
+        public unsafe void Update(float elapsedSeconds, ParticleBuffer.ParticleIterator iterator)
+        {
             while (iterator.HasNext)
             {
                 var particle = iterator.Next();

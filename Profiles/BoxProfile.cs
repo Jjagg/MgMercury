@@ -13,7 +13,7 @@ namespace Mercury3D.Profiles
 
         public override void GetOffsetAndHeading(out Vector3 offset, out Axis heading)
         {
-            var rand = FastRand.NextInteger((int) (2 * Width + 2 * Height));
+            var rand = FastRand.NextInteger((int) (2 * Width + 2 * Height + 2 * Depth));
             if (rand < Width) // Top
                 offset = new Vector3(FastRand.NextSingle(Width * -0.5f, Width * 0.5f), Height * -0.5f, FastRand.NextSingle(Depth * -0.5f, Depth * 0.5f));
             else if (rand < 2 * Width) // Bottom
