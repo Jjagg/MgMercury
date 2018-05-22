@@ -30,6 +30,7 @@ namespace Mercury3D
         public ParticleBuffer Buffer { get; }
         
         public int ActiveParticles => Buffer.Count;
+        public int Capacity => Buffer.Size;
         
         public Vector3 Offset { get; set; }
         
@@ -42,6 +43,11 @@ namespace Mercury3D
         public BlendMode BlendMode { get; set; }
 
         public object UserData { get; set; }
+
+        public void ReclaimParticles(int count)
+        {
+            Buffer.Reclaim(count);
+        }
 
         private void ReclaimExpiredParticles()
         {
