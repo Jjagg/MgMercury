@@ -17,14 +17,20 @@ namespace Demo
         private ParticleEffect _particleEffectImage;
         private ParticleEffect _particleEffectJson;
         private ParticleEffect _particleEffectJsonString;
+        private ParticleEffect _particleEffectOpacityContainer;
         private ParticleEffect _particleEffectSquare;
-        private Vector _particleJsonPosition = new Vector(700, 0);
+        private ParticleEffect _particleEffectSpray;
+        private ParticleEffect _particleEffectVortex;
+        private Vector _particleJsonPosition = new Vector(800, 80);
         private SpriteBatch _spriteBatch;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Window.Title = "Venus Particle Engine Demo — press Escape to exit";
         }
 
         protected override void Draw(GameTime gameTime)
@@ -37,6 +43,9 @@ namespace Demo
                 _spriteBatch.Draw(_particleEffectImage);
                 _spriteBatch.Draw(_particleEffectJson);
                 _spriteBatch.Draw(_particleEffectJsonString);
+                _spriteBatch.Draw(_particleEffectOpacityContainer);
+                _spriteBatch.Draw(_particleEffectVortex);
+                _spriteBatch.Draw(_particleEffectSpray);
             }
             _spriteBatch.End();
 
@@ -50,6 +59,7 @@ namespace Demo
             ParticleInitImage();
             ParticleInitJson();
             ParticleInitJsonString();
+            ParticleInitDiagnostics();
         }
 
         protected override void Update(GameTime gameTime)
@@ -62,23 +72,32 @@ namespace Demo
 
             //Square
             _particleEffectSquare.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            _particleEffectSquare.Trigger(new Vector(150, 350));
+            _particleEffectSquare.Trigger(new Vector(1100, 170));
 
             //Image
             _particleEffectImage.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            _particleEffectImage.Trigger(new Vector(400, 250));
+            _particleEffectImage.Trigger(new Vector(480, 170));
 
             //Json
             _particleEffectJson.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            _particleJsonPosition.Y += 10;
+            _particleJsonPosition.Y += 3;
             _particleEffectJson.Trigger(_particleJsonPosition);
 
             _particleEffectJsonString.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            _particleEffectJsonString.Trigger(new Vector(150, 150));
+            _particleEffectJsonString.Trigger(new Vector(160, 170));
 
-            if (_particleJsonPosition.Y > 1000)
+            _particleEffectOpacityContainer.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            _particleEffectOpacityContainer.Trigger(new Vector(250, 530));
+
+            _particleEffectVortex.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            _particleEffectVortex.Trigger(new Vector(640, 530));
+
+            _particleEffectSpray.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            _particleEffectSpray.Trigger(new Vector(1030, 640));
+
+            if (_particleJsonPosition.Y > 270)
             {
-                _particleJsonPosition.Y = 0;
+                _particleJsonPosition.Y = 80;
             }
 
             base.Update(gameTime);
@@ -212,6 +231,81 @@ namespace Demo
                 },
                 Modifiers = Modifiers
             });
+        }
+
+        private void ParticleInitDiagnostics()
+        {
+            var blankTexture = new Texture2D(GraphicsDevice, 1, 1);
+            blankTexture.SetData(new[] { Color.White });
+
+            _particleEffectOpacityContainer = new ParticleEffect();
+            _particleEffectOpacityContainer.Emitters.Add("opacity-container",
+                new Emitter(180, TimeSpan.FromSeconds(2), Profile.Circle(55f, Profile.CircleRadiation.Out))
+                {
+                    Texture = blankTexture,
+                    BlendMode = BlendMode.Alpha,
+                    Parameters = new ReleaseParameters
+                    {
+                        Quantity = 2,
+                        Speed = 80f,
+                        Colour = new Colour(180f, 1f, 0.5f),
+                        Opacity = 1f,
+                        Scale = 12f
+                    },
+                    Modifiers = new Dictionary<string, IModifier>
+                    {
+                        ["Hue"] = new HueInterpolator2(180f, 300f),
+                        ["Opacity"] = new OpacityInterpolator3(0f, 1f, 0f),
+                        ["CircleContainer"] = new CircleContainerModifier(110f, true, 0.85f),
+                        ["Rotation"] = new RotationModifier(4f)
+                    }
+                });
+
+            _particleEffectVortex = new ParticleEffect();
+            _particleEffectVortex.Emitters.Add("vortex",
+                new Emitter(120, TimeSpan.FromSeconds(2.5), Profile.Ring(95f, Profile.CircleRadiation.None))
+                {
+                    Texture = blankTexture,
+                    BlendMode = BlendMode.Add,
+                    Parameters = new ReleaseParameters
+                    {
+                        Quantity = 1,
+                        Speed = 45f,
+                        Colour = new Colour(210f, 1f, 0.6f),
+                        Opacity = 0.9f,
+                        Scale = 9f,
+                        Mass = 1f
+                    },
+                    Modifiers = new Dictionary<string, IModifier>
+                    {
+                        ["Vortex"] = new VortexModifier(Vector.Zero, 0.4f, 200f),
+                        ["VelocityColour"] = new VelocityColourModifier(
+                            new Colour(210f, 1f, 0.6f), new Colour(30f, 1f, 0.6f), 80f),
+                        ["Fade"] = new OpacityFastFadeModifier()
+                    }
+                });
+
+            _particleEffectSpray = new ParticleEffect();
+            _particleEffectSpray.Emitters.Add("spray",
+                new Emitter(180, TimeSpan.FromSeconds(1.8), Profile.Spray(Axis.Up, MathHelper.PiOver4))
+                {
+                    Texture = blankTexture,
+                    BlendMode = BlendMode.Alpha,
+                    Parameters = new ReleaseParameters
+                    {
+                        Quantity = 2,
+                        Speed = new RangeF(100f, 160f),
+                        Colour = new Colour(45f, 1f, 0.55f),
+                        Opacity = 1f,
+                        Scale = new RangeF(6f, 12f)
+                    },
+                    Modifiers = new Dictionary<string, IModifier>
+                    {
+                        ["Gravity"] = new LinearGravityModifier(Axis.Down, 70f),
+                        ["VelocityHue"] = new VelocityHueModifier(15f, 55f, 160f),
+                        ["Fade"] = new OpacityFastFadeModifier()
+                    }
+                });
         }
     }
 }
