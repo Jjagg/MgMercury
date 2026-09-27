@@ -6,7 +6,7 @@
 
         public Vector InitialScale { get; set; }
         public Vector FinalScale { get; set; }
-        
+
         public ScaleInterpolator2() { }
 
         public ScaleInterpolator2(Vector initialScale, Vector finalScale)

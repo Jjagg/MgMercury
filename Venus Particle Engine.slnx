@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="VenusParticleEngine.csproj" />
   <Project Path="Demo/Demo.csproj" />
+  <Project Path="Tests/VenusParticleEngine.Tests.csproj" />
 </Solution>

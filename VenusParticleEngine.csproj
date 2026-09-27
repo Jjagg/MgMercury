@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Demo/**/*.cs" />
+    <Compile Remove="Demo/**/*.cs;Tests/**/*.cs" />
     <None Update="README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 </Project>

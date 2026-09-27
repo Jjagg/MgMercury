@@ -21,12 +21,89 @@ For mobile and console builds, prefer `ReadFromJson` with JSON supplied by the a
 
 ## Build
 
+Install the .NET SDK 9.0.200 or newer, then restore the repository-local tools once after cloning:
+
 ```bash
 dotnet tool restore
+```
+
+To validate and build every project, including the Demo and unit tests:
+
+```bash
 dotnet build "Venus Particle Engine.slnx" --configuration Release
+```
+
+To build only the library and produce its assembly files:
+
+```bash
+dotnet build VenusParticleEngine.csproj --configuration Release
+```
+
+This produces the following files:
+
+- `bin/Release/net9.0/VenusParticleEngine.dll`: the library used at runtime.
+- `bin/Release/net9.0/VenusParticleEngine.pdb`: optional debug symbols, which enable source-level debugging when placed next to the DLL.
+
+To run the DesktopGL Demo:
+
+```bash
 dotnet run --project Demo/Demo.csproj
+```
+
+To create the NuGet package:
+
+```bash
 dotnet pack VenusParticleEngine.csproj --configuration Release
 ```
+
+### Use the DLL in another project
+
+The recommended distribution method is the NuGet package. If you need a direct file reference, copy `VenusParticleEngine.dll` to your consuming project and optionally copy `VenusParticleEngine.pdb` next to it for debugging. Add a reference to the DLL and the MonoGame package appropriate for the target platform:
+
+```xml
+<ItemGroup>
+  <Reference Include="VenusParticleEngine">
+    <HintPath>lib/VenusParticleEngine.dll</HintPath>
+  </Reference>
+  <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.5.1" />
+  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+</ItemGroup>
+```
+
+Replace `MonoGame.Framework.DesktopGL` with the MonoGame package for your application platform when necessary. Pre-built DLL and PDB files are also available from the [GitHub Releases](https://github.com/mbelkiman/venus-particle-engine/releases) page.
+
+## Quality checks
+
+GitHub Actions runs the following checks for every pull request. You can also run any individual check locally when it is relevant to your change:
+
+To verify C# whitespace formatting:
+
+```bash
+dotnet format whitespace "Venus Particle Engine.slnx" --verify-no-changes
+```
+
+To build the solution in Release:
+
+```bash
+dotnet build "Venus Particle Engine.slnx" --configuration Release
+```
+
+To run the unit tests and measure line coverage:
+
+```bash
+dotnet test Tests/VenusParticleEngine.Tests.csproj --configuration Release \
+  /p:CollectCoverage=true /p:CoverletOutput=coverage.xml /p:CoverletOutputFormat=opencover \
+  /p:Threshold=1 /p:ThresholdType=line
+```
+
+To generate a human-readable HTML report from an existing `Tests/coverage.xml` file:
+
+```bash
+dotnet tool run reportgenerator -reports:Tests/coverage.xml -targetdir:Tests/coverage \
+  -reporttypes:Html
+```
+
+Run `dotnet tool restore` once after cloning the repository to install the local tools used by the Demo and the HTML report. The HTML report is generated locally at `Tests/coverage/index.html` and is not uploaded by the CI job.
 
 ## Load from Json
 You can load a json particle file using 
@@ -81,5 +158,3 @@ You can see example inside de [Demo folder](https://github.com/mmbelkiman/Venus-
  - Made scale a vector for separate x and y scaling.
  - A ColorHelper class to convert colors.
  - New container modifiers
-
-[![kofi](https://az743702.vo.msecnd.net/cdn/kofi2.png)](https://ko-fi.com/B0B2KE8I)

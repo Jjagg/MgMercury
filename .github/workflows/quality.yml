@@ -1,0 +1,43 @@
+name: Quality
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Build, test and package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore .NET tools
+        run: dotnet tool restore
+
+      - name: Restore dependencies
+        run: dotnet restore "Venus Particle Engine.slnx"
+
+      - name: Verify C# formatting
+        run: dotnet format whitespace "Venus Particle Engine.slnx" --verify-no-changes --no-restore
+
+      - name: Build
+        run: dotnet build "Venus Particle Engine.slnx" --configuration Release --no-restore
+
+      - name: Test with coverage
+        run: >-
+          dotnet test Tests/VenusParticleEngine.Tests.csproj --configuration Release --no-build --no-restore
+          /p:CollectCoverage=true /p:CoverletOutput=coverage.xml /p:CoverletOutputFormat=opencover
+          /p:Threshold=1 /p:ThresholdType=line
+
+      - name: Pack library
+        run: dotnet pack VenusParticleEngine.csproj --configuration Release --no-build --no-restore
