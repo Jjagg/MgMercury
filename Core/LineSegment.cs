@@ -9,7 +9,16 @@ namespace VenusParticleEngine.Core
     [StructLayout(LayoutKind.Sequential)]
     public struct LineSegment : IEquatable<LineSegment>
     {
+        private const int ComponentsPerVector = 2;
+
+        /// <summary>
+        /// The first endpoint of the line segment.
+        /// </summary>
         internal Vector _point1;
+
+        /// <summary>
+        /// The second endpoint of the line segment.
+        /// </summary>
         internal Vector _point2;
 
         /// <summary>
@@ -52,10 +61,15 @@ namespace VenusParticleEngine.Core
             return new Vector(t.X, t.Y);
         }
 
+        /// <summary>
+        /// Copies both endpoints to consecutive floats in <paramref name="destination"/>, in the
+        /// order <c>X1, Y1, X2, Y2</c>. The destination must have space for four floats.
+        /// </summary>
+        /// <param name="destination">The first float in the destination memory block.</param>
         public unsafe void CopyTo(float* destination)
         {
             _point1.CopyTo(destination);
-            _point2.CopyTo(destination + sizeof(Vector));
+            _point2.CopyTo(destination + ComponentsPerVector);
         }
 
         public void Destructure(out Vector point1, out Vector point2)

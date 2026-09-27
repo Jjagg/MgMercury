@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 
 namespace VenusParticleEngine.Core
 {
@@ -37,6 +38,7 @@ namespace VenusParticleEngine.Core
         /// <param name="h">The value of the hue channel.</param>
         /// <param name="s">The value of the saturation channel.</param>
         /// <param name="l">The value of the lightness channel.</param>
+        [JsonConstructor]
         public Colour(float h, float s, float l) : this()
         {
             // normalize the hue
@@ -203,7 +205,7 @@ namespace VenusParticleEngine.Core
             return new Colour(
                 c1.H + t * (h2 - c1.H),
                 c1.S + t * (c2.S - c1.S),
-                c1.L + t * (c2.L - c2.L));
+                c1.L + t * (c2.L - c1.L));
         }
     }
 }

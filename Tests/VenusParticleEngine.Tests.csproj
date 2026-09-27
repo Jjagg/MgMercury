@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -11,6 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.5.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
       <PrivateAssets>all</PrivateAssets>
@@ -19,5 +21,10 @@
 
   <ItemGroup>
     <ProjectReference Include="../VenusParticleEngine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../Demo/Content/testParticle.ptc" Link="Assets/testParticle.ptc" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../Demo/Content/testParticle2.ptc" Link="Assets/testParticle2.ptc" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

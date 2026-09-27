@@ -11,6 +11,9 @@ namespace VenusParticleEngine.Core
 
         public unsafe ParticleBuffer(int size)
         {
+            if (size <= 0)
+                throw new ArgumentOutOfRangeException(nameof(size), "size must be greater than zero");
+
             Size = size;
             // add one extra spot in memory for margin between head and tail
             // so the iterator can see that it's at the end
@@ -50,6 +53,9 @@ namespace VenusParticleEngine.Core
         /// </summary>
         public unsafe ParticleIterator Release(int releaseQuantity)
         {
+            if (releaseQuantity < 0)
+                throw new ArgumentOutOfRangeException(nameof(releaseQuantity));
+
             var numToRelease = Math.Min(releaseQuantity, Available);
 
             var prevCount = Count;
@@ -64,6 +70,9 @@ namespace VenusParticleEngine.Core
 
         public unsafe void Reclaim(int number)
         {
+            if (number < 0 || number > Count)
+                throw new ArgumentOutOfRangeException(nameof(number));
+
             Count -= number;
 
             Head += number;
@@ -178,6 +187,11 @@ namespace VenusParticleEngine.Core
                     _current -= _buffer.Size + 1;
 
                 return this;
+            }
+
+            internal unsafe ParticleIterator CreateIndependentIterator()
+            {
+                return new ParticleIterator(_buffer).Reset();
             }
 
             public unsafe Particle* Next()

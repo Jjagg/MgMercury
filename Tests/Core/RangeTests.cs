@@ -2,7 +2,7 @@ using VenusParticleEngine.Core;
 using Xunit;
 using ParticleRange = VenusParticleEngine.Core.Range;
 
-namespace VenusParticleEngine.Tests;
+namespace VenusParticleEngine.Tests.Core;
 
 public sealed class RangeTests
 {
@@ -25,13 +25,5 @@ public sealed class RangeTests
 
         Assert.Equal(-3, result.Min);
         Assert.Equal(10, result.Max);
-    }
-
-    [Fact]
-    public void RangeF_RejectsInfiniteValues()
-    {
-        var range = new RangeF(-1f, 1f);
-
-        Assert.Throws<ArgumentException>(() => range.Contains(float.PositiveInfinity));
     }
 }

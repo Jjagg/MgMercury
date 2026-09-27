@@ -4,8 +4,6 @@ using VenusParticleEngine.Core.Modifiers;
 
 namespace VenusParticleEngine.Core
 {
-    using TPL = System.Threading.Tasks;
-
     [Serializable]
     public class ModifierExecutionStrategy
     {
@@ -46,7 +44,11 @@ namespace VenusParticleEngine.Core
     {
         public override void ExecuteModifiers(Dictionary<string, IModifier> modifiers, float elapsedSeconds, ParticleBuffer.ParticleIterator iterator)
         {
-            TPL.Parallel.ForEach(modifiers, modifier => modifier.Value.Update(elapsedSeconds, iterator.Reset()));
+            // Modifiers can write to the same particle fields, so executing them concurrently
+            // produces races and non-deterministic results. Keep the existing strategy name for
+            // serialized effects, but use independent iterators and deterministic execution.
+            foreach (var modifier in modifiers)
+                modifier.Value.Update(elapsedSeconds, iterator.CreateIndependentIterator());
         }
     }
 

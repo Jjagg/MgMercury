@@ -1,9 +1,12 @@
 ﻿using System;
 
+using Newtonsoft.Json;
+
 namespace VenusParticleEngine.Core
 {
     public struct ColourRange
     {
+        [JsonConstructor]
         public ColourRange(Colour min, Colour max)
         {
             Min = min;

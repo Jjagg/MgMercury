@@ -1,4 +1,6 @@
-﻿namespace VenusParticleEngine.Core.Modifiers
+﻿using System;
+
+namespace VenusParticleEngine.Core.Modifiers
 {
     public class OpacityInterpolator3 : IModifier
     {
@@ -19,32 +21,19 @@
 
         public unsafe void Update(float elapsedSeconds, ParticleBuffer.ParticleIterator iterator)
         {
-            var delta = MediumOpacity - InitialOpacity;
-            var delta2 = FinalOpacity - MediumOpacity;
-            bool mediumIsLowerInitial = (MediumOpacity - InitialOpacity) >= 0 ? false : true;
-            bool finalIsLowerInitial = (FinalOpacity - MediumOpacity) >= 0 ? false : true;
-
             while (iterator.HasNext)
             {
                 var particle = iterator.Next();
+                var age = Math.Clamp(particle->Age, 0f, 1f);
 
-                if (particle->Age == particle->StartAge)
+                if (age <= 0.5f)
                 {
-                    particle->Opacity = InitialOpacity;
+                    particle->Opacity = InitialOpacity + (MediumOpacity - InitialOpacity) * (age * 2f);
                 }
-
-                if (particle->Age < particle->StartAge * ((particle->Term * 100) / 2))
+                else
                 {
-                    particle->Opacity = delta * ((particle->Age) * 1f) + InitialOpacity;
+                    particle->Opacity = MediumOpacity + (FinalOpacity - MediumOpacity) * ((age - 0.5f) * 2f);
                 }
-
-                if (particle->Age >= particle->StartAge * ((particle->Term * 100) / 2))
-                {
-                    particle->Opacity = delta2 * ((particle->Age) * 1f) + MediumOpacity;
-                }
-
-                if (particle->Opacity < 0)
-                    particle->Opacity = 0;
             }
         }
     }

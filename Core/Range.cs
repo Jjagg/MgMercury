@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace VenusParticleEngine.Core
 {
@@ -41,16 +42,17 @@ namespace VenusParticleEngine.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Range"/> struct.
         /// </summary>
-        /// <param name="x">The left boundary value.</param>
-        /// <param name="y">The right boundary value.</param>
+        /// <param name="min">The left boundary value.</param>
+        /// <param name="max">The right boundary value.</param>
         /// <exception cref="T:System.ArgumentException">
-        /// Thrown if either of the values passed to the <paramref name="x"/> or <paramref name="y"/>
+        /// Thrown if either of the values passed to the <paramref name="min"/> or <paramref name="max"/>
         /// parameters are not finite. That is, positive infinity, negative infinity, or NaN.
         /// </exception>
-        public Range(int x, int y)
+        [JsonConstructor]
+        public Range(int min, int max)
         {
-            Min = Math.Min(x, y);
-            Max = Math.Max(x, y);
+            Min = Math.Min(min, max);
+            Max = Math.Max(min, max);
         }
 
         /// <summary>

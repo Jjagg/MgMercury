@@ -80,8 +80,13 @@ namespace VenusParticleEngine.Core.Modifiers
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
-            //serializer.Serialize(writer, value, typeof(ColourInterpolator2));
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            JObject.FromObject(value, JsonSerializer.CreateDefault()).WriteTo(writer);
         }
     }
 }

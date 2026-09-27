@@ -41,10 +41,10 @@ namespace VenusParticleEngine
 
         public static Colour ToHsl(this Color c)
         {
-            return ToHsl(c.R, c.B, c.G);
+            return ToHsl(c.R, c.G, c.B);
         }
 
-        public static Colour ToHsl(float r, float b, float g)
+        public static Colour ToHsl(float r, float g, float b)
         {
             r = r / 255f;
             b = b / 255f;

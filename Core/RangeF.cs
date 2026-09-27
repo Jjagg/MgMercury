@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace VenusParticleEngine.Core
 {
@@ -49,6 +50,7 @@ namespace VenusParticleEngine.Core
         /// Thrown if either of the values passed to the <paramref name="min"/> or <paramref name="max"/>
         /// parameters are not finite. That is, positive infinity, negative infinity, or NaN.
         /// </exception>
+        [JsonConstructor]
         public RangeF(float min, float max)
         {
             Min = Math.Min(min, max);

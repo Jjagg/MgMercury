@@ -27,6 +27,8 @@ namespace VenusParticleEngine.Core.Modifiers
                 var diff = Position + particle->TriggerPos - particle->Position;
 
                 var distance2 = diff.LengthSq;
+                if (distance2 <= float.Epsilon)
+                    continue;
 
                 var speedGain = GravConst * Mass / distance2 * elapsedSeconds;
                 // normalize distances and multiply by speedGain
