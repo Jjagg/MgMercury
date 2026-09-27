@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +24,7 @@ namespace Demo
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            IsMouseVisible = true;
         }
 
         protected override void Draw(GameTime gameTime)
@@ -41,23 +43,23 @@ namespace Demo
             base.Draw(gameTime);
         }
 
-        protected override void Initialize()
+        protected override void LoadContent()
         {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             ParticleInitSquare();
             ParticleInitImage();
             ParticleInitJson();
             ParticleInitJsonString();
-
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
         protected override void Update(GameTime gameTime)
         {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
+
             //Square
             _particleEffectSquare.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             _particleEffectSquare.Trigger(new Vector(150, 350));
@@ -126,7 +128,12 @@ namespace Demo
 
         private void ParticleInitJson()
         {
-            _particleEffectJson = ParticleEffect.ReadFromJsonFile(Content.RootDirectory + "\\testParticle.ptc", GraphicsDevice, Content);
+            _particleEffectJson = ParticleEffect.ReadFromJsonFile(Path.Combine(Content.RootDirectory, "testParticle.ptc"), GraphicsDevice, Content);
+            if (_particleEffectJson == null)
+            {
+                throw new InvalidOperationException("Unable to load the particle effect from testParticle.ptc.");
+            }
+
             foreach (var item in _particleEffectJson.Emitters)
             {
                 if (string.IsNullOrEmpty(item.Value.TexturePath))
@@ -139,31 +146,19 @@ namespace Demo
 
         private void ParticleInitJsonString()
         {
-            TextReader reader = null;
-            string fileContents = "";
+            var fileContents = File.ReadAllText(Path.Combine(Content.RootDirectory, "testParticle2.ptc"));
 
-            try
-            {
-                reader = new StreamReader(Content.RootDirectory + "/testParticle2.ptc");
-                fileContents = reader.ReadToEnd();
-                Console.WriteLine(fileContents);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
-            }
-
-            if (fileContents != null)
+            if (!string.IsNullOrWhiteSpace(fileContents))
             {
                 _particleEffectJsonString = ParticleEffect.ReadFromJson(
-                    Content.RootDirectory + "\\",
+                    Content.RootDirectory,
                     fileContents,
                     GraphicsDevice, Content);
+
+                if (_particleEffectJsonString == null)
+                {
+                    throw new InvalidOperationException("Unable to load the particle effect from testParticle2.ptc.");
+                }
 
                 foreach (var item in _particleEffectJsonString.Emitters)
                 {

@@ -71,23 +71,62 @@ namespace VenusParticleEngine.Core
                 Head -= (Size + 1);
         }
 
-        public void CopyTo(IntPtr destination)
+        public unsafe void CopyTo(IntPtr destination)
         {
-            memcpy(destination, _nativePointer, ActiveSizeInBytes);
-        }
+            if (Count == 0)
+                return;
 
-        public void CopyToReverse(IntPtr destination)
-        {
-            var offset = 0;
-            for (var i = ActiveSizeInBytes - Particle.SizeInBytes; i >= 0; i -= Particle.SizeInBytes)
+            var source = Head;
+            var destinationOffset = 0;
+            var remaining = Count;
+
+            while (remaining > 0)
             {
-                memcpy(IntPtr.Add(destination, offset), IntPtr.Add(_nativePointer, i), Particle.SizeInBytes);
-                offset += Particle.SizeInBytes;
+                var contiguousParticles = Math.Min(remaining, (int)(BufferEnd - source));
+                var bytesToCopy = contiguousParticles * Particle.SizeInBytes;
+
+                memcpy(IntPtr.Add(destination, destinationOffset), (IntPtr)source, bytesToCopy);
+
+                destinationOffset += bytesToCopy;
+                remaining -= contiguousParticles;
+                source += contiguousParticles;
+
+                if (source == BufferEnd)
+                    source = (Particle*)_nativePointer;
             }
         }
 
-        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern void memcpy(IntPtr dest, IntPtr src, int count);
+        public unsafe void CopyToReverse(IntPtr destination)
+        {
+            if (Count == 0)
+                return;
+
+            var source = Head + Count - 1;
+            if (source >= BufferEnd)
+                source -= Size + 1;
+
+            var destinationOffset = 0;
+            for (var i = 0; i < Count; i++)
+            {
+                memcpy(IntPtr.Add(destination, destinationOffset), (IntPtr)source, Particle.SizeInBytes);
+                destinationOffset += Particle.SizeInBytes;
+
+                source--;
+                if (source < (Particle*)_nativePointer)
+                    source = BufferEnd - 1;
+            }
+        }
+
+        public static unsafe void memcpy(IntPtr dest, IntPtr src, int count)
+        {
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            if (count == 0)
+                return;
+
+            Buffer.MemoryCopy(src.ToPointer(), dest.ToPointer(), count, count);
+        }
 
         private bool _disposed;
 
@@ -98,7 +137,7 @@ namespace VenusParticleEngine.Core
                 Marshal.FreeHGlobal(_nativePointer);
                 _disposed = true;
 
-                GC.RemoveMemoryPressure(Particle.SizeInBytes * Size);
+                GC.RemoveMemoryPressure(SizeInBytes);
             }
 
             GC.SuppressFinalize(this);

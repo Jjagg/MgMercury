@@ -29,7 +29,7 @@ namespace VenusParticleEngine.Core
 
                 settings.Converters.Add(new IModifierJsonConverter());
                 ParticleEffect pf = JsonConvert.DeserializeObject<ParticleEffect>(jsonString, settings);
-                pf.UpdateEmmitersTexture(jsonPath, graphicsDevice, content);
+                pf.UpdateEmmitersTexture(NormalizePath(jsonPath), graphicsDevice, content);
                 return pf;
             }
             catch (Exception e)
@@ -41,13 +41,11 @@ namespace VenusParticleEngine.Core
 
         public static ParticleEffect ReadFromJsonFile(string filePath, GraphicsDevice graphicsDevice, ContentManager content)
         {
-            TextReader reader = null;
             try
             {
-                reader = new StreamReader(filePath);
-                var fileContents = reader.ReadToEnd();
+                var fileContents = File.ReadAllText(filePath);
                 var settings = new JsonSerializerSettings();
-                var jsonPath = filePath.Substring(0, filePath.LastIndexOf("\\")) + "\\";
+                var jsonPath = Path.GetDirectoryName(filePath) ?? string.Empty;
 
                 settings.Converters.Add(new IModifierJsonConverter());
                 ParticleEffect pf = JsonConvert.DeserializeObject<ParticleEffect>(fileContents, settings);
@@ -59,13 +57,6 @@ namespace VenusParticleEngine.Core
                 Console.WriteLine("Venus Particle Engine : ParticleEffect (ReadFromJsonFile) => " + e.Message);
                 return null;
             }
-            finally
-            {
-                if (reader != null)
-                {
-                    reader.Close();
-                }
-            }
         }
 
         public void UpdateEmmitersTexture(String jsonPath, GraphicsDevice graphicsDevice, ContentManager content)
@@ -74,7 +65,8 @@ namespace VenusParticleEngine.Core
             {
                 item.Value.Parameters.Quantity = 1;
 
-                if (item.Value.TexturePath.Equals(""))
+                var texturePath = item.Value.TexturePath ?? string.Empty;
+                if (texturePath.Length == 0)
                 {
                     item.Value.Texture = new Texture2D(graphicsDevice, 1, 1);
                     // item.Value.Texture.SetData<Color>(new[] { Color.White });
@@ -83,11 +75,11 @@ namespace VenusParticleEngine.Core
                 {
                     if (jsonPath.Equals(""))
                     {
-                        item.Value.Texture = LoadImage(item.Value.TexturePath, graphicsDevice, content);
+                        item.Value.Texture = LoadImage(NormalizePath(texturePath), graphicsDevice, content);
                     }
                     else
                     {
-                        item.Value.Texture = LoadImage(jsonPath + item.Value.TexturePath, graphicsDevice, content);
+                        item.Value.Texture = LoadImage(Path.Combine(NormalizePath(jsonPath), NormalizePath(texturePath)), graphicsDevice, content);
                     }
                 }
 
@@ -104,30 +96,71 @@ namespace VenusParticleEngine.Core
 
         private Texture2D LoadImage(String fileName, GraphicsDevice graphicsDevice, ContentManager content)
         {
-            if (fileName.Contains(".xnb"))
+            if (TryLoadContentTexture(fileName, content, out var texture))
             {
-                return LoadImageXNB(fileName, content);
+                return texture;
             }
-            else
-            {
-                return LoadImageNormal(fileName, graphicsDevice);
-            }
-        }
 
-        private Texture2D LoadImageXNB(string fileName, ContentManager content)
-        {
-            Texture2D texture = null;
-            try
-            {
-                texture = content.Load<Texture2D>(fileName.ToLower().Replace(".xnb", "").Replace("content\\", ""));
-            }
-            catch
+            if (Path.GetExtension(fileName).Equals(".xnb", StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine("LoadImageXNB Cannot open file " + fileName);
                 throw new FileNotFoundException("Cannot open file", fileName);
             }
 
-            return texture;
+            return LoadImageNormal(fileName, graphicsDevice);
+        }
+
+        private static bool TryLoadContentTexture(string fileName, ContentManager content, out Texture2D texture)
+        {
+            texture = null;
+            if (content == null || !TryGetContentAssetName(fileName, content, out var assetName))
+                return false;
+
+            try
+            {
+                texture = content.Load<Texture2D>(Path.ChangeExtension(assetName, null));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool TryGetContentAssetName(string fileName, ContentManager content, out string assetName)
+        {
+            assetName = string.Empty;
+            var normalizedFileName = NormalizePath(fileName);
+            if (normalizedFileName.Length == 0)
+                return false;
+
+            var contentRoot = NormalizePath(content.RootDirectory).TrimEnd(Path.DirectorySeparatorChar);
+            if (Path.IsPathRooted(normalizedFileName))
+            {
+                var relativePath = Path.GetRelativePath(
+                    Path.GetFullPath(contentRoot),
+                    Path.GetFullPath(normalizedFileName));
+
+                if (relativePath.Equals("..") || relativePath.StartsWith(".." + Path.DirectorySeparatorChar))
+                    return false;
+
+                assetName = relativePath;
+            }
+            else
+            {
+                var contentPrefix = contentRoot.Length == 0
+                    ? string.Empty
+                    : contentRoot + Path.DirectorySeparatorChar;
+
+                assetName = normalizedFileName.StartsWith(contentPrefix, StringComparison.OrdinalIgnoreCase)
+                    ? normalizedFileName.Substring(contentPrefix.Length)
+                    : normalizedFileName;
+            }
+
+            assetName = Path.ChangeExtension(assetName, null)
+                .Replace(Path.DirectorySeparatorChar, '/');
+
+            return assetName.Length > 0;
         }
 
         private Texture2D LoadImageNormal(string fileName, GraphicsDevice graphicsDevice)
@@ -135,10 +168,9 @@ namespace VenusParticleEngine.Core
             Texture2D spriteAtlas = null;
             try
             {
-                FileStream fileStream = new FileStream(fileName, FileMode.Open);
+                using var fileStream = File.OpenRead(fileName);
                 spriteAtlas = Texture2D.FromStream(graphicsDevice, fileStream);
                 spriteAtlas.Name = fileName;
-                fileStream.Dispose();
             }
             catch
             {
@@ -146,6 +178,13 @@ namespace VenusParticleEngine.Core
                 throw new FileNotFoundException("Cannot open file", fileName);
             }
             return spriteAtlas;
+        }
+
+        private static string NormalizePath(string path)
+        {
+            return string.IsNullOrEmpty(path)
+                ? string.Empty
+                : path.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
         }
 
         public int ActiveParticles => Emitters.Sum(t => t.Value.ActiveParticles);

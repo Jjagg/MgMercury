@@ -9,11 +9,24 @@ MgMercury is a particle engine based on  [Mercury Particle Engine](https://githu
  - ParticleEffect now have play/pause
  - Emmiter have public bool "Loop", when false, the particle will show only one time. But if you want to show again, set "ForceLoop = true" at any time.
  - Json support to Load particles from file
- - New SpriteBachRender
 
 ## Depedencies
- - [Newtonsoft.Json 12.0.1](https://github.com/JamesNK/Newtonsoft.Json/tree/11.0.2)
- - Monogame 3.7 or higher
+ - [Newtonsoft.Json 13.0.4](https://www.nuget.org/packages/Newtonsoft.Json/13.0.4)
+ - [MonoGame 3.8.5.1](https://www.nuget.org/profiles/MonoGame)
+ - .NET SDK 9.0.200 or newer (required for `.slnx` support)
+
+Venus uses the common MonoGame APIs and does not impose a runtime platform on consuming applications. Use MonoGame 3.8.5.1 and choose the platform package that matches your application (for example, `MonoGame.Framework.DesktopGL`, `MonoGame.Framework.Android`, or `MonoGame.Framework.iOS`). The included Demo uses `MonoGame.Framework.DesktopGL` for Windows, macOS, and Linux.
+
+For mobile and console builds, prefer `ReadFromJson` with JSON supplied by the application's asset system and textures processed by MGCB (`.xnb`). `ReadFromJsonFile` and raw image paths remain available for externally readable files.
+
+## Build
+
+```bash
+dotnet tool restore
+dotnet build "Venus Particle Engine.slnx" --configuration Release
+dotnet run --project Demo/Demo.csproj
+dotnet pack VenusParticleEngine.csproj --configuration Release
+```
 
 ## Load from Json
 You can load a json particle file using 
@@ -58,7 +71,6 @@ You can see example inside de [Demo folder](https://github.com/mmbelkiman/Venus-
 # Changes to MgMercury
  - Emmiter (Inside ParticleEffect) now is Dictionary (string, Emitter)
  - Modifiers (Inside Emmiter) now is Dictionary (string, IModifier)
- - SpriteBachRenderer is changed to SpriteBatchRender, that is static)
 
 # Changes to original Mercury particle editor
 

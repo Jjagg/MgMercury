@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO;
 using VenusParticleEngine.Core.Modifiers;
 using VenusParticleEngine.Core.Profiles;
 using Newtonsoft.Json;
@@ -104,10 +105,9 @@ namespace VenusParticleEngine.Core
             get { return _texture; }
             set
             {
-                if (!string.IsNullOrEmpty(value.Name))
+                if (value != null && !string.IsNullOrEmpty(value.Name))
                 {
-                    var lastIndex = value.Name.LastIndexOf("\\") + 1;
-                    TexturePath = value.Name.Substring(lastIndex, value.Name.Length- lastIndex);
+                    TexturePath = Path.GetFileName(value.Name.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar));
                 }
                 _texture = value;
             }

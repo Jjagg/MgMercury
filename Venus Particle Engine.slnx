@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="VenusParticleEngine.csproj" />
+  <Project Path="Demo/Demo.csproj" />
+</Solution>

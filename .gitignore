@@ -228,3 +228,7 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# Cross-platform IDE and operating-system metadata
+.idea/
+.DS_Store
